@@ -86,8 +86,8 @@ unsigned int ModuleAudio::LoadFx(const char* path)
 	}
 	else
 	{
-        fx[fx_count++] = sound;
-		ret = fx_count;
+        fx[fx_count] = sound;
+		ret = fx_count++;
 	}
 
 	return ret;
