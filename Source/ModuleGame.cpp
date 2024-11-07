@@ -129,84 +129,114 @@ bool ModuleGame::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
-	circle = LoadTexture("Assets/Pokeball.png"); 
+	circle = LoadTexture("Assets/wheel.png"); 
 	box = LoadTexture("Assets/crate.png");
 	rick = LoadTexture("Assets/rick_head.png");
 
-	Mapa_Pokemon = LoadTexture("Assets/Pokemon_Map.png");
+	Mapa_Pokemon = LoadTexture("Assets/staticPritesWindowSize.png");
 	
 	bonus_fx = App->audio->LoadFx("Assets/bonus.wav");
 
 	sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50);
 
-	int Pokemon_Map[128] = {
-		106, 278,
-		138, 255,
-		154, 248,
-		154, 208,
-		150, 198,
-		137, 193,
-		137, 176,
-		132, 167,
-		140, 151,
-		148, 126,
-		150, 89,
-		150, 74,
-		141, 65,
-		135, 50,
-		125, 40,
-		105, 35,
-		87, 33,
-		41, 41,
-		44, 37,
-		50, 30,
-		66, 25,
-		78, 25,
-		98, 25,
-		111, 27,
-		130, 37,
-		148, 46,
-		157, 65,
-		161, 83,
-		161, 277,
-		174, 276,
-		178, 137,
-		177, 110,
-		175, 87,
-		172, 74,
-		171, 66,
-		162, 49,
-		157, 41,
-		150, 31,
-		141, 25,
-		134, 20,
-		123, 13,
-		111, 11,
-		96, 11,
-		79, 11,
-		65, 13,
-		49, 17,
-		30, 30,
-		22, 34,
-		16, 43,
-		12, 61,
-		12, 82,
-		9, 96,
-		28, 168,
-		24, 174,
-		24, 195,
-		12, 199,
-		7, 208,
-		10, 248,
-		21, 256,
-		56, 278,
-		0, 278,
-		1, 1,
-		192, 0,
-		193, 277
+		int Pokemon_Map[94] = {
+	471, 821,
+	470, 164,
+	443, 88,
+	408, 47,
+	369, 20,
+	309, 0,
+	250, -2,
+	161, 8,
+	123, 42,
+	113, 83,
+	121, 126,
+	130, 149,
+	141, 170,
+	119, 139,
+	107, 20,
+	95, 6,
+	77, 12,
+	67, 61,
+	70, 127,
+	80, 176,
+	91, 214,
+	69, 143,
+	69, 84,
+	59, 31,
+	34, 20,
+	4, 31,
+	3, 145,
+	13, 250,
+	38, 332,
+	55, 376,
+	61, 399,
+	39, 457,
+	27, 486,
+	24, 534,
+	3, 567,
+	-1, 734,
+	140, 821,
+	-1, 824,
+	-2, -2,
+	486, 0,
+	486, 824,
+	257, 820,
+	405, 733,
+	402, 573,
+	363, 521,
+	431, 365,
+	435, 819
 	};
 
-	entities.emplace_back(new Shape(App->physics, 0, 0, Pokemon_Map, 128, this, Mapa_Pokemon));
+	int collisions[38] = {
+		43, 167,
+		69, 259,
+		239, 343,
+		242, 364,
+		296, 385,
+		276, 466,
+		268, 463,
+		288, 414,
+		278, 399,
+		266, 388,
+		246, 391,
+		231, 432,
+		165, 395,
+		162, 350,
+		114, 340,
+		120, 385,
+		99, 377,
+		33, 166,
+		34, 57
+	};
+
+	int collisions2[16] = {
+		345, 377,
+		389, 323,
+		377, 306,
+		419, 229,
+		412, 289,
+		402, 327,
+		392, 361,
+		313, 487
+	};
+
+	int collisions3[12] = {
+		305, 82,
+		311, 43,
+		344, 54,
+		374, 76,
+		396, 101,
+		417, 152
+	};
+
+
+
+	entities.emplace_back(new Shape(App->physics,  0,  0, Pokemon_Map,  94, this, Mapa_Pokemon));
+	entities.emplace_back(new Shape(App->physics,  0,  0, collisions,   38, this, Mapa_Pokemon));
+	entities.emplace_back(new Shape(App->physics,  0,  0, collisions2,  16, this, Mapa_Pokemon));
+	entities.emplace_back(new Shape(App->physics,  0,  0, collisions2,  12, this, Mapa_Pokemon));
 
 	return ret;
 }
