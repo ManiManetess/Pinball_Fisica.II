@@ -231,12 +231,65 @@ bool ModuleGame::Start()
 		417, 152
 	};
 
+	int collisions4[6] = {
+	113, 685,
+	66, 661,
+	67, 581
+	};
+
+	int collisions5[6] = {
+	286, 684,
+	330, 578,
+	335, 661
+	};
+
+	int collisions6[8] = {
+	373, 603,
+	374, 688,
+	291, 734,
+	365, 681
+	};
+
+	int collisions7[8] = {
+	35, 679,
+	111, 731,
+	27, 684,
+	28, 601
+	};
+
+	int lil[6] = {
+	200, 80,
+	203, 46,
+	206, 81
+	};
+
+	int lil2[6] = {
+	233, 75,
+	237, 41,
+	243, 73
+	};
+
+	int lil3[6] = {
+	269, 76,
+	273, 39,
+	276, 74
+	};
+
+
+
 
 
 	entities.emplace_back(new Shape(App->physics,  0,  0, Pokemon_Map,  94, this, Mapa_Pokemon));
 	entities.emplace_back(new Shape(App->physics,  0,  0, collisions,   38, this, Mapa_Pokemon));
 	entities.emplace_back(new Shape(App->physics,  0,  0, collisions2,  16, this, Mapa_Pokemon));
 	entities.emplace_back(new Shape(App->physics,  0,  0, collisions3,  12, this, Mapa_Pokemon));
+	entities.emplace_back(new Shape(App->physics,  0,  0, collisions4,   6, this, Mapa_Pokemon));
+	entities.emplace_back(new Shape(App->physics,  0,  0, collisions5,   6, this, Mapa_Pokemon));
+	entities.emplace_back(new Shape(App->physics,  0,  0, collisions6,   8, this, Mapa_Pokemon));
+	entities.emplace_back(new Shape(App->physics,  0,  0, collisions7,   8, this, Mapa_Pokemon));
+	entities.emplace_back(new Shape(App->physics,  0,  0, lil,   		  6, this, Mapa_Pokemon));
+	entities.emplace_back(new Shape(App->physics,  0,  0, lil2,		  	  6, this, Mapa_Pokemon));
+	entities.emplace_back(new Shape(App->physics,  0,  0, lil3,		  	  6, this, Mapa_Pokemon));
 
 	return ret;
 }
