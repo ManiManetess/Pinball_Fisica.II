@@ -1,29 +1,29 @@
-# {Project Name}
+# Pinball Fisica
 
 ## Description
 
-{project description}
+This game is beeing developed by Manel Montes, Arnau Pascual and Roger Miralles.
+We are try to imitate the original game of "Pinball". This game is currently in development
 
 ## Key Features
 
- - {Feature01}
- - {Feature02}
+ - Wall collisions
+ - Sound while ball is colliding whit the obstcales
  - {Feature03}
  - {Feature04}
  
 ## Controls
 
- - {ControlsScheme}
+ - press "1" to generate a ball where the mouse is currently on
 
 ## Developers
 
- - {Dev01} - {Role(s)}
- - {Dev02} - {Role(s)}
- - {Dev03} - {Role(s)}
- - {Dev04} - {Role(s)}
+ - Manel Montes - Wall collisions + sound efects + flippers
+ - Arnau Pascual - Assets + wall collisions
+ - Roger Miralles - Flippers
 
 ## License
 
 This project is licensed under an unmodified MIT license, which is an OSI-certified license that allows static linking with closed source software. Check [LICENSE](LICENSE) for further details.
 
-{AdditionalLicenses}
+
