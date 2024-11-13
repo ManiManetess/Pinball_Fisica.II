@@ -25,8 +25,6 @@ public:
 
 	b2Body* leftFlipper;
 	b2Body* rightFlipper;
-	Texture2D leftFlipperTexture;
-	Texture2D rightFlipperTexture;
 
 	void CreateFlippers();
 	void UpdateFlippers();
@@ -52,6 +50,9 @@ public:
 	Texture2D box;
 	Texture2D rick;
 	Texture2D Mapa_Pokemon;
+
+	Texture2D leftFlipperTexture;
+	Texture2D rightFlipperTexture;
 
 	uint32 bonus_fx;
 
