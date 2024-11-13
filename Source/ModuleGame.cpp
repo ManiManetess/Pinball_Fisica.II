@@ -168,15 +168,10 @@ ModuleGame::ModuleGame(Application* app, bool start_enabled) : Module(app, start
 	world = new b2World(gravity);  // Inicializa el mundo con la gravedad
 	ray_on = false;
 	sensed = false;
-	leftFlipperTexture = LoadTexture("Assets/leftFlipper.png");
-	rightFlipperTexture = LoadTexture("Assets/rightFlipper.png");
 }
 
 ModuleGame::~ModuleGame()
-{
-	UnloadTexture(leftFlipperTexture);
-	UnloadTexture(rightFlipperTexture);
-}
+{}
 
 // Load assets
 bool ModuleGame::Start()
