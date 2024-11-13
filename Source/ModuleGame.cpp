@@ -1,9 +1,59 @@
-#include "Globals.h"
+﻿#include "Globals.h"
 #include "Application.h"
 #include "ModuleRender.h"
 #include "ModuleGame.h"
 #include "ModuleAudio.h"
 #include "ModulePhysics.h"
+
+const float SCALE = 100.0f;         // Factor de escala, ajusta según sea necesario
+const float RAD_TO_DEG = 57.2958f;  // 180 / π, convierte radianes a grados
+
+// Declaración de texturas para los flippers
+Texture2D leftFlipper;
+Texture2D rightFlipper;
+
+	int leftFlipperX = 100;
+	int leftFlipperY = 400;
+	int rightFlipperX = 300;
+	int rightFlipperY = 400;
+
+	void ModuleGame::CreateFlippers() {
+		// Definición del flipper izquierdo
+		b2BodyDef leftFlipperDef;
+		leftFlipperDef.type = b2_dynamicBody;
+		leftFlipperDef.position = leftFlipperPosition;
+		leftFlipper = world->CreateBody(&leftFlipperDef);
+
+		b2PolygonShape flipperShape;
+		flipperShape.SetAsBox(0.5f, 0.1f);  // Tamaño del flipper, ajústalo según sea necesario
+
+		b2FixtureDef leftFixtureDef;
+		leftFixtureDef.shape = &flipperShape;
+		leftFixtureDef.density = 1.0f;
+		leftFlipper->CreateFixture(&leftFixtureDef);
+
+		// Definición del flipper derecho
+		b2BodyDef rightFlipperDef;
+		rightFlipperDef.type = b2_dynamicBody;
+		rightFlipperDef.position = rightFlipperPosition;
+		rightFlipper = world->CreateBody(&rightFlipperDef);
+
+		b2FixtureDef rightFixtureDef;
+		rightFixtureDef.shape = &flipperShape;
+		rightFixtureDef.density = 1.0f;
+		rightFlipper->CreateFixture(&rightFixtureDef);
+	}
+
+	void ModuleGame::UpdateFlippers() {
+		// Calcula la posición de los flippers en la pantalla
+		Vector2 leftPosition = { leftFlipper->GetPosition().x * SCALE, leftFlipper->GetPosition().y * SCALE };
+		Vector2 rightPosition = { rightFlipper->GetPosition().x * SCALE, rightFlipper->GetPosition().y * SCALE };
+
+		// Dibuja las texturas de los flippers
+		DrawTextureEx(leftFlipperTexture, leftPosition, leftFlipper->GetAngle() * RAD_TO_DEG, 1.0f, WHITE);
+		DrawTextureEx(rightFlipperTexture, rightPosition, rightFlipper->GetAngle() * RAD_TO_DEG, 1.0f, WHITE);
+	}
+
 
 class PhysicEntity
 {
@@ -114,12 +164,19 @@ private:
 
 ModuleGame::ModuleGame(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	b2Vec2 gravity(0.0f, -9.8f);  // Ajusta la gravedad según sea necesario
+	world = new b2World(gravity);  // Inicializa el mundo con la gravedad
 	ray_on = false;
 	sensed = false;
+	leftFlipperTexture = LoadTexture("Assets/leftFlipper.png");
+	rightFlipperTexture = LoadTexture("Assets/rightFlipper.png");
 }
 
 ModuleGame::~ModuleGame()
-{}
+{
+	UnloadTexture(leftFlipperTexture);
+	UnloadTexture(rightFlipperTexture);
+}
 
 // Load assets
 bool ModuleGame::Start()
@@ -135,9 +192,28 @@ bool ModuleGame::Start()
 
 	Mapa_Pokemon = LoadTexture("Assets/staticPritesWindowSize.png");
 	
+
+	// Inicializa las texturas
+	Texture2D leftFlipperTexture = LoadTexture("Assets/leftFlipper.png");
+	Texture2D rightFlipperTexture = LoadTexture("Assets/rightFlipper.png");
+
+	// Crea los cuerpos físicos en CreateFlippers()
+	b2BodyDef leftFlipperDef;
+	leftFlipperDef.type = b2_dynamicBody;
+	leftFlipperDef.position = leftFlipperPosition;
+	leftFlipper = world->CreateBody(&leftFlipperDef);
+
+	b2BodyDef rightFlipperDef;
+	rightFlipperDef.type = b2_dynamicBody;
+	rightFlipperDef.position = rightFlipperPosition;
+	rightFlipper = world->CreateBody(&rightFlipperDef);
+
+
 	bonus_fx = App->audio->LoadFx("Assets/bonus.wav");
 
 	sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50);
+
+	CreateFlippers();
 
 		int Pokemon_Map[94] = {
 	471, 821,
@@ -276,7 +352,13 @@ bool ModuleGame::Start()
 	};
 
 
+	// Obtén la posición de los cuerpos físicos y conviértela a píxeles
+	Vector2 leftPosition = { leftFlipper->GetPosition().x * SCALE, leftFlipper->GetPosition().y * SCALE };
+	Vector2 rightPosition = { rightFlipper->GetPosition().x * SCALE, rightFlipper->GetPosition().y * SCALE };
 
+	// Dibuja las texturas en las posiciones de los cuerpos físicos
+	DrawTextureEx(leftFlipperTexture, leftPosition, leftFlipper->GetAngle()* RAD_TO_DEG, 1.0f, WHITE);
+	DrawTextureEx(rightFlipperTexture, rightPosition, rightFlipper->GetAngle()* RAD_TO_DEG, 1.0f, WHITE);
 
 
 	entities.emplace_back(new Shape(App->physics,  0,  0, Pokemon_Map,  94, this, Mapa_Pokemon));
@@ -302,9 +384,33 @@ bool ModuleGame::CleanUp()
 	return true;
 }
 
+void ModuleGame::HandleInput() {
+	if (IsKeyPressed(KEY_A)) {
+		// Gira el flipper izquierdo hacia arriba
+		leftFlipper->SetTransform(leftFlipper->GetPosition(), -0.3f);  // Ajusta el ángulo según sea necesario
+	}
+	else if (IsKeyReleased(KEY_A)) {
+		// Devuelve el flipper izquierdo a su posición inicial
+		leftFlipper->SetTransform(leftFlipper->GetPosition(), 0.0f);
+	}
+
+	if (IsKeyPressed(KEY_D)) {
+		// Gira el flipper derecho hacia arriba
+		rightFlipper->SetTransform(rightFlipper->GetPosition(), 0.3f);  // Ajusta el ángulo según sea necesario
+	}
+	else if (IsKeyReleased(KEY_D)) {
+		// Devuelve el flipper derecho a su posición inicial
+		rightFlipper->SetTransform(rightFlipper->GetPosition(), 0.0f);
+	}
+}
+
+
+
 // Update: draw background
 update_status ModuleGame::Update()
 {
+	UpdateFlippers();
+
 	if(IsKeyPressed(KEY_SPACE))
 	{
 		ray_on = !ray_on;
@@ -322,8 +428,6 @@ update_status ModuleGame::Update()
 	{
 		entities.emplace_back(new Box(App->physics, GetMouseX(), GetMouseY(), this, box));
 	}
-
-
 
 	// Prepare for raycast ------------------------------------------------------
 	
