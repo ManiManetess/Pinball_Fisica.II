@@ -18,24 +18,24 @@ Texture2D rightFlipper;
 	int rightFlipperY = 400;
 
 	void ModuleGame::CreateFlippers() {
-		// Definición del flipper izquierdo
+		// Flipper izquierdo
 		b2BodyDef leftFlipperDef;
 		leftFlipperDef.type = b2_dynamicBody;
-		leftFlipperDef.position = leftFlipperPosition;
+		leftFlipperDef.position.Set(1.5f, 5.0f);  // Ajusta la posición según la imagen
 		leftFlipper = world->CreateBody(&leftFlipperDef);
 
 		b2PolygonShape flipperShape;
-		flipperShape.SetAsBox(0.5f, 0.1f);  // Tamaño del flipper, ajústalo según sea necesario
+		flipperShape.SetAsBox(0.6f, 0.1f);  // Tamaño del flipper
 
 		b2FixtureDef leftFixtureDef;
 		leftFixtureDef.shape = &flipperShape;
 		leftFixtureDef.density = 1.0f;
 		leftFlipper->CreateFixture(&leftFixtureDef);
 
-		// Definición del flipper derecho
+		// Flipper derecho
 		b2BodyDef rightFlipperDef;
 		rightFlipperDef.type = b2_dynamicBody;
-		rightFlipperDef.position = rightFlipperPosition;
+		rightFlipperDef.position.Set(4.5f, 5.0f);  // Ajusta la posición
 		rightFlipper = world->CreateBody(&rightFlipperDef);
 
 		b2FixtureDef rightFixtureDef;
@@ -45,11 +45,9 @@ Texture2D rightFlipper;
 	}
 
 	void ModuleGame::UpdateFlippers() {
-		// Calcula la posición de los flippers en la pantalla
 		Vector2 leftPosition = { leftFlipper->GetPosition().x * SCALE, leftFlipper->GetPosition().y * SCALE };
 		Vector2 rightPosition = { rightFlipper->GetPosition().x * SCALE, rightFlipper->GetPosition().y * SCALE };
 
-		// Dibuja las texturas de los flippers
 		DrawTextureEx(leftFlipperTexture, leftPosition, leftFlipper->GetAngle() * RAD_TO_DEG, 1.0f, WHITE);
 		DrawTextureEx(rightFlipperTexture, rightPosition, rightFlipper->GetAngle() * RAD_TO_DEG, 1.0f, WHITE);
 	}
@@ -181,6 +179,8 @@ bool ModuleGame::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
+	CreateFlippers();
+
 	circle = LoadTexture("Assets/baseball.png"); 
 	box = LoadTexture("Assets/crate.png");
 	rick = LoadTexture("Assets/rick_head.png");
@@ -207,8 +207,6 @@ bool ModuleGame::Start()
 	bonus_fx = App->audio->LoadFx("Assets/bonus.wav");
 
 	sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50);
-
-	CreateFlippers();
 
 		int Pokemon_Map[94] = {
 	471, 821,
@@ -404,7 +402,7 @@ void ModuleGame::HandleInput() {
 // Update: draw background
 update_status ModuleGame::Update()
 {
-	UpdateFlippers();
+	HandleInput();
 
 	if(IsKeyPressed(KEY_SPACE))
 	{
@@ -466,6 +464,12 @@ update_status ModuleGame::Update()
 	}
 
 	return UPDATE_CONTINUE;
+}
+
+void ModuleGame::Render() {
+
+	UpdateFlippers();
+	// Otros elementos de renderizado
 }
 
 void ModuleGame::OnCollision(PhysBody* bodyA, PhysBody* bodyB)

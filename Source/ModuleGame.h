@@ -29,6 +29,8 @@ public:
 	void CreateFlippers();
 	void UpdateFlippers();
 	void HandleInput();
+	void Render();
+
 
 	ModuleGame(Application* app, bool start_enabled = true);
 	~ModuleGame();
